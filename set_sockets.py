@@ -33,8 +33,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
         #   !!!!!!!!!!!!!!!!!   TEMP    !!!!!!!!!!!!!!!!!
         if GPIO.input(gpio_switch1) == GPIO.LOW:
             stan_czujnika = 1
+            wlasna_tablica_otrzymanych_informacji[ktory_socket] = 1
         else:
             stan_czujnika = 0
+            wlasna_tablica_otrzymanych_informacji[ktory_socket] = 0
 
         if tresc_wiadomosci[0] == '1':
             tresc_wiadomosci = '2'+str(ktory_socket)
