@@ -23,7 +23,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                               ['0', '0', '0', '0', '0'],
                                               ['0', '0', '0', '0', '0'],
                                               ['0', '0', '0', '0', '0']]
-    time_otrzymania_info_o_pozarze = [0, 0, 0, 0]
+    time_otrzymania_info_o_pozarze = [0, 0, 0, 0, 0]
 
     while True:
         #   Wysyłanie informacji o pozarze
