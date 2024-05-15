@@ -6,7 +6,7 @@ gpio_led=17
 gpio_switch1=22
 gpio_switch2=27
 
-GPIO.setmode(GPIO.BMC)
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(gpio_led, GPIO.OUT)
 GPIO.setup(gpio_switch1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(gpio_switch2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
