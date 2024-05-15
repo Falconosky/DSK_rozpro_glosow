@@ -75,6 +75,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 if str(wlasna_tablica_otrzymanych_informacji[i]) == '1':
                                     ile_czujnikow_plonie += 1
                                 ile_czujnikow_dziala += 1
+                        print(wlasna_tablica_otrzymanych_informacji)
                         if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
                             GPIO.output(gpio_led, GPIO.HIGH)
                         else:
