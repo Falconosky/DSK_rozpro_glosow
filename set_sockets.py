@@ -75,7 +75,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 if str(wlasna_tablica_otrzymanych_informacji[i]) == '1':
                                     ile_czujnikow_plonie += 1
                                 ile_czujnikow_dziala += 1
-                        print(wlasna_tablica_otrzymanych_informacji)
                         if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
                             GPIO.output(gpio_led, GPIO.HIGH)
                         else:
@@ -92,6 +91,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
                             wlasna_tablica_otrzymanych_informacji[i] = 'x'
                             print("awaria typu 3")
+
+                print(wlasna_tablica_otrzymanych_informacji)
         except queue.Empty:
             continue
 
