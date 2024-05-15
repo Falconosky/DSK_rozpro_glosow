@@ -2,9 +2,9 @@ import threading
 import RPi.GPIO as GPIO
 from set_sockets import czujnik
 
-gpio_led=2
-gpio_switch1=3
-gpio_switch2=4
+gpio_led=14
+gpio_switch1=18
+gpio_switch2=15
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(gpio_led, GPIO.OUT)
