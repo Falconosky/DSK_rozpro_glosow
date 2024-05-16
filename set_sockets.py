@@ -5,6 +5,7 @@ import threading
 import queue
 import RPi.GPIO as GPIO
 
+debug_level = 2
 
 def blink(gpio_led, blink_queue):
     GPIO.setmode(GPIO.BCM)
@@ -143,10 +144,11 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                     break
                             if zebrano_podejrzenia == 1:
                                 break
-                        print("zerano wszystkie informacje, " + str(aktualne_podejrzenia))
+                        if debug_level >= 2:
+                            print("zerano wszystkie informacje, " + str(aktualne_podejrzenia))
                         if zebrano_podejrzenia == 0:
                             aktualne_podejrzenia = 0
-                        elif zebrano_podejrzenia>=wiarygodnosc_bredzenia:
+                        elif aktualne_podejrzenia>=wiarygodnosc_bredzenia:
                             wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
                             print("wykryto awarie nr 3 w czujniku nr " + msg[1])
 
