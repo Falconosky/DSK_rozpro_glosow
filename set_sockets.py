@@ -39,7 +39,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
     GPIO.setmode(GPIO.BCM)
     #   STALE KONFIGURACYJNE
     cooldown_otrzymania_info_o_pozarze = 30     # w sekundach
-    wiarygodnosc_bredzenia=3
+    wiarygodnosc_bredzenia = 2
     aktualne_podejrzenia = 0
     awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
 
