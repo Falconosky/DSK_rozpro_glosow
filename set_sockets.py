@@ -121,7 +121,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
         # Sprawdzanie kolejki na nowe wiadomości do wyświetlenia
         try:
-            print("---------------------------------------------")
+            print(str(ktory_socket) + "---------------------------------------------")
             while not message_queue.empty():
                 msg = message_queue.get_nowait()
                 if debug_level >= 1:
