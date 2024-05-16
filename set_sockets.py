@@ -83,7 +83,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             GPIO.output(gpio_led, GPIO.HIGH)
                         else:
                             GPIO.output(gpio_led, GPIO.LOW)
-                    wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
+                    if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
+                        wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
                 if msg[0] == '2':
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][0] = msg[2]
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][1] = msg[3]
