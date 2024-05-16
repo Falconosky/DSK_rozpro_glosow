@@ -138,6 +138,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 #   AWARIA ze zbyt dlugim pozarem
                                 print("Wykryto awarie nr 2 w czujniku nr " + msg[1])
                                 wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
+                        elif time_otrzymania_info_o_pozarze[int(msg[1])] != 0:
+                            time_otrzymania_info_o_pozarze[int(msg[1])] = 0
 
                         #   detekcja awarii nr 3
                         awaria3_pomocnicza_tabela[int(msg[1])] = 1
