@@ -126,7 +126,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                 msg = message_queue.get_nowait()
                 if debug_level >= 1:
                     print(msg)
-                if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x' or wlasna_tablica_otrzymanych_informacji[ktory_socket] == 'x':
+                if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x' and wlasna_tablica_otrzymanych_informacji[ktory_socket] != 'x':
                     if msg[0] == '1':
                         if msg[2] == '1':
                             if time_otrzymania_info_o_pozarze[int(msg[1])] == 0:
