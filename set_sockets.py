@@ -107,8 +107,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
             while not message_queue.empty():
                 msg = message_queue.get_nowait()
                 print(msg)
-                if msg[0] == '1':
-                    if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
+                if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
+                    if msg[0] == '1':
                         if msg[2] == '1':
                             if time_otrzymania_info_o_pozarze[int(msg[1])] == 0:
                                 time_otrzymania_info_o_pozarze[int(msg[1])] = time.time()
@@ -160,21 +160,21 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             if time_otrzymania_info_o_pozarze[int(msg[1])] != 0 and msg[2] == 0:
                                 time_otrzymania_info_o_pozarze[int(msg[1])] = 0
                             wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
-                if msg[0] == '2':
-                    klienci_tablica_otrzymanych_informacji[int(msg[1])][0] = msg[2]
-                    klienci_tablica_otrzymanych_informacji[int(msg[1])][1] = msg[3]
-                    klienci_tablica_otrzymanych_informacji[int(msg[1])][2] = msg[4]
-                    klienci_tablica_otrzymanych_informacji[int(msg[1])][3] = msg[5]
-                    klienci_tablica_otrzymanych_informacji[int(msg[1])][4] = msg[6]
+                    if msg[0] == '2':
+                        klienci_tablica_otrzymanych_informacji[int(msg[1])][0] = msg[2]
+                        klienci_tablica_otrzymanych_informacji[int(msg[1])][1] = msg[3]
+                        klienci_tablica_otrzymanych_informacji[int(msg[1])][2] = msg[4]
+                        klienci_tablica_otrzymanych_informacji[int(msg[1])][3] = msg[5]
+                        klienci_tablica_otrzymanych_informacji[int(msg[1])][4] = msg[6]
 
-                    #   Obsluga bledu nr3
-                    ktora_to_literka = 2 + ktory_socket
-                    if msg[ktora_to_literka] == 'x':
-                        print("to ja nie dzialam :o")
-                    for i in range(5):
-                        if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
-                            wlasna_tablica_otrzymanych_informacji[i] = 'x'
-                            print("awaria typu 3")
+                        #   Obsluga bledu nr3
+                        ktora_to_literka = 2 + ktory_socket
+                        if msg[ktora_to_literka] == 'x':
+                            print("to ja nie dzialam :o")
+                        for i in range(5):
+                            if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
+                                wlasna_tablica_otrzymanych_informacji[i] = 'x'
+                                print("awaria typu 3")
                 print(wlasna_tablica_otrzymanych_informacji)
         except queue.Empty:
             continue
