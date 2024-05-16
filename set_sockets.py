@@ -219,9 +219,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 na_pewno += 1
                                 if na_pewno >= 10:
                                     wlasna_tablica_otrzymanych_informacji[i] = 'x'
-                                    klienci_tablica_otrzymanych_informacji[i] = ['x', 'x', 'x', 'x', 'x']
                             else:
                                 na_pewno = 0
+                            if wlasna_tablica_otrzymanych_informacji[i] == 'x':
+                                klienci_tablica_otrzymanych_informacji[i] = ['x', 'x', 'x', 'x', 'x']
                 if debug_level >= 1:
                     print(wlasna_tablica_otrzymanych_informacji)
 
