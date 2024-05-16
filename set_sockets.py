@@ -135,7 +135,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             ile_czujnikow_dziala = 0
                             ile_czujnikow_plonie = 0
                             for i in range(5):
-                                if not str(wlasna_tablica_otrzymanych_informacji[i]) == 'x':
+                                if str(wlasna_tablica_otrzymanych_informacji[i]) != 'x':
                                     if str(wlasna_tablica_otrzymanych_informacji[i]) == '1':
                                         ile_czujnikow_plonie += 1
                                     ile_czujnikow_dziala += 1
