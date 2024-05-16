@@ -106,7 +106,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
         try:
             while not message_queue.empty():
                 msg = message_queue.get_nowait()
-                print(msg)
+                if debug_level >= 1:
+                    print(msg)
                 if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                     if msg[0] == '1':
                         if msg[2] == '1':
@@ -171,11 +172,12 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         ktora_to_literka = 2 + ktory_socket
                         if msg[ktora_to_literka] == 'x':
                             print("to ja nie dzialam :o")
+                            blink_queue.put(2)
                         for i in range(5):
                             if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
                                 wlasna_tablica_otrzymanych_informacji[i] = 'x'
-                                print("awaria typu 3")
-                print(wlasna_tablica_otrzymanych_informacji)
+                if debug_level >= 1:
+                    print(wlasna_tablica_otrzymanych_informacji)
         except queue.Empty:
             continue
 
