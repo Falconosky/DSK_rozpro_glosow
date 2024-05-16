@@ -42,6 +42,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
     wiarygodnosc_bredzenia = 2
     aktualne_podejrzenia = 0
     awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
+    tresc_wiadomosci = '2'
 
     #   schemat wiadomosci
     #   {typ_wiadomosci}{numer_czujnika_nadawczego}{informacja}
@@ -64,7 +65,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
     while True:
         #   Wysyłanie informacji o pozarze
         stan_czujnika = None
-        tresc_wiadomosci = '2'
         awaria3 = 0
 
         if GPIO.input(gpio_switch1) == GPIO.LOW:
