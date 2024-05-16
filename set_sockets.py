@@ -71,8 +71,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                               ['0', '0', '0', '0', '0'],
                                               ['0', '0', '0', '0', '0']]
     time_otrzymania_info_o_pozarze = [0, 0, 0, 0, 0]
-    blink_queue = [queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue()]
-    threading.Thread(target=blink, args=(gpio_led, blink_queue[ktory_socket])).start()
+    blink_queue = queue.Queue()
+    threading.Thread(target=blink, args=(gpio_led, blink_queue)).start()
 
     klienci_tablica_otrzymanych_informacji[ktory_socket] = ['-', '-', '-', '-', '-']
 
@@ -121,6 +121,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
         # Sprawdzanie kolejki na nowe wiadomości do wyświetlenia
         try:
+            print("---------------------------------------------")
             while not message_queue.empty():
                 msg = message_queue.get_nowait()
                 if debug_level >= 1:
@@ -178,7 +179,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                         ile_czujnikow_plonie += 1
                                     ile_czujnikow_dziala += 1
                             if ile_czujnikow_plonie >= ile_czujnikow_dziala / 2:
-                                blink_queue[ktory_socket].put(1)
+                                blink_queue.put(1)
                                 juz_jest_pozar = 1
                                 print("jest juz pozar")
                             elif juz_jest_pozar == 1:
@@ -187,7 +188,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                     if time_otrzymania_info_o_pozarze[i] != 0:
                                         time_otrzymania_info_o_pozarze[i] = time.time()
                             else:
-                                blink_queue[ktory_socket].put(0)
+                                blink_queue.put(0)
                                 juz_jest_pozar = 0
                                 print("nie ma juz pozaru")
                     if msg[0] == '2':
@@ -210,7 +211,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         #   Obsluga bledu nr3
                         ktora_to_literka = 2 + ktory_socket
                         if msg[ktora_to_literka] == 'x' and wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
-                            blink_queue[ktory_socket].put(2)
+                            blink_queue.put(2)
                         for i in range(5):
                             if i == ktory_socket:
                                 continue
