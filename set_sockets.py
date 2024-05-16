@@ -1,9 +1,38 @@
+import random
 import socket
 import time
 import threading
 import queue
 import RPi.GPIO as GPIO
 
+
+def blink(gpio_led, blink_queue):
+    GPIO.setmode(GPIO.BCM)
+    blinking_duration = 3
+    loop_speed = 0.5            #  jak szybko/czesto watek sprawdza zawartosc kolejki
+    sie_pali_czy_nie = 0
+    last_time = 0
+    tryb = None
+    while True:
+        try:
+            while not blink_queue.empty():
+                tryb = blink_queue.get_nowait()
+        except queue.Empty:
+            if tryb == 0:
+                GPIO.output(gpio_led, GPIO.LOW)
+            elif tryb == 1:
+                GPIO.output(gpio_led, GPIO.HIGH)
+            elif tryb == 2:
+                if sie_pali_czy_nie == 0 and last_time+blinking_duration < time.time():
+                    GPIO.output(gpio_led, GPIO.HIGH)
+                    last_time = time.time()
+                    sie_pali_czy_nie = 1
+                elif sie_pali_czy_nie == 1 and last_time+blinking_duration < time.time():
+                    GPIO.output(gpio_led, GPIO.LOW)
+                    last_time = time.time()
+                    sie_pali_czy_nie = 0
+            time.sleep(loop_speed)
+            continue
 
 def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, gpio_switch1, gpio_switch2):
     GPIO.setmode(GPIO.BCM)
@@ -24,19 +53,26 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                               ['0', '0', '0', '0', '0'],
                                               ['0', '0', '0', '0', '0']]
     time_otrzymania_info_o_pozarze = [0, 0, 0, 0, 0]
+    blink_queue = queue.Queue()
+    threading.Thread(target=blink, args=(gpio_led, blink_queue)).start()
+
 
     while True:
         #   Wysyłanie informacji o pozarze
         stan_czujnika = None
         tresc_wiadomosci = '2'
+        awaria3 = 0
 
-        #   !!!!!!!!!!!!!!!!!   TEMP    !!!!!!!!!!!!!!!!!
         if GPIO.input(gpio_switch1) == GPIO.LOW:
             stan_czujnika = 1
             wlasna_tablica_otrzymanych_informacji[ktory_socket] = 1
         else:
             stan_czujnika = 0
             wlasna_tablica_otrzymanych_informacji[ktory_socket] = 0
+            if GPIO.input(gpio_switch2) == GPIO.LOW:
+                awaria3 = 1
+            else:
+                awaria3 = 0
 
         if tresc_wiadomosci[0] == '1':
             tresc_wiadomosci = '2'+str(ktory_socket)
@@ -53,6 +89,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
             if i != ktory_socket:  # Nie wysyłać do samego siebie
                 client_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 client_address = ('localhost', port)
+                if awaria3 == 1:
+                    if tresc_wiadomosci[0] == '1':
+                        tmp = '1' + tresc_wiadomosci[1] + str(random.randint(0, 1))
+                        tresc_wiadomosci = tmp
                 message = f'{tresc_wiadomosci}'
                 client_sock.sendto(message.encode(), client_address)
                 client_sock.close()
@@ -65,6 +105,9 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                     if msg[2] == '1':
                         if time_otrzymania_info_o_pozarze[int(msg[1])] == 0:
                             time_otrzymania_info_o_pozarze[int(msg[1])] = time.time()
+                            for i in time_otrzymania_info_o_pozarze:
+                                if time_otrzymania_info_o_pozarze[i] != 0:
+                                    time_otrzymania_info_o_pozarze[i] = time.time()
                         elif time_otrzymania_info_o_pozarze[int(msg[1])] + cooldown_otrzymania_info_o_pozarze < time.time():
                             #   AWARIA ze zbyt dlugim pozarem
                             wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
@@ -78,9 +121,9 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                     ile_czujnikow_plonie += 1
                                 ile_czujnikow_dziala += 1
                         if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
-                            GPIO.output(gpio_led, GPIO.HIGH)
+                            blink_queue.put(1)
                         else:
-                            GPIO.output(gpio_led, GPIO.LOW)
+                            blink_queue.put(0)
                     if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                         wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
                 if msg[0] == '2':
@@ -89,7 +132,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][2] = msg[4]
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][3] = msg[5]
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][4] = msg[6]
+
                     #   Obsluga bledu nr3
+                    if klienci_tablica_otrzymanych_informacji[int(msg[1])][ktory_socket] == 'x':
+                        print("to ja nie dzialam :o")
                     for i in range(5):
                         if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
                             wlasna_tablica_otrzymanych_informacji[i] = 'x'
