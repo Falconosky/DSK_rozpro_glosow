@@ -10,7 +10,7 @@ debug_level = 0
 def blink(gpio_led, blink_queue):
     GPIO.setmode(GPIO.BCM)
 
-    blinking_duration = 3
+    blinking_duration = 1
     loop_speed = 0.5  # Jak szybko/często wątek sprawdza zawartość kolejki
     sie_pali_czy_nie = 0
     last_time = 0
@@ -176,7 +176,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         #   Obsluga bledu nr3
                         ktora_to_literka = 2 + ktory_socket
                         if msg[ktora_to_literka] == 'x':
-                            print("to ja nie dzialam :o")
                             blink_queue.put(2)
                         for i in range(5):
                             if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
