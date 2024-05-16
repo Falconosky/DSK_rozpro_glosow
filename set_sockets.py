@@ -131,26 +131,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 print("Wykryto awarie nr 2 w czujniku nr " + msg[1])
                                 wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
 
-                            # weryfikacja czy jest pozar
-                            ile_czujnikow_dziala = 0
-                            ile_czujnikow_plonie = 0
-                            for i in range(5):
-                                if str(wlasna_tablica_otrzymanych_informacji[i]) != 'x':
-                                    if str(wlasna_tablica_otrzymanych_informacji[i]) == '1':
-                                        ile_czujnikow_plonie += 1
-                                    ile_czujnikow_dziala += 1
-                            if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
-                                blink_queue.put(1)
-                                juz_jest_pozar = 1
-                                print("jest juz pozar")
-                            else:
-                                blink_queue.put(0)
-                                juz_jest_pozar = 0
-                                print("nie ma juz pozaru")
-                                for i in range(5):
-                                    if time_otrzymania_info_o_pozarze[i] != 0:
-                                        time_otrzymania_info_o_pozarze[i] = time.time()
-
                         #   detekcja awarii nr 3
                         awaria3_pomocnicza_tabela[int(msg[1])] = 1
                         awaria3_pomocnicza_tabela[ktory_socket] = 1
@@ -182,6 +162,25 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             if time_otrzymania_info_o_pozarze[int(msg[1])] != 0 and msg[2] == 0:
                                 time_otrzymania_info_o_pozarze[int(msg[1])] = 0
                             wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
+                            # weryfikacja czy jest pozar
+                            ile_czujnikow_dziala = 0
+                            ile_czujnikow_plonie = 0
+                            for i in range(5):
+                                if str(wlasna_tablica_otrzymanych_informacji[i]) != 'x':
+                                    if str(wlasna_tablica_otrzymanych_informacji[i]) == '1':
+                                        ile_czujnikow_plonie += 1
+                                    ile_czujnikow_dziala += 1
+                            if ile_czujnikow_plonie >= ile_czujnikow_dziala / 2:
+                                blink_queue.put(1)
+                                juz_jest_pozar = 1
+                                print("jest juz pozar")
+                            else:
+                                blink_queue.put(0)
+                                juz_jest_pozar = 0
+                                print("nie ma juz pozaru")
+                                for i in range(5):
+                                    if time_otrzymania_info_o_pozarze[i] != 0:
+                                        time_otrzymania_info_o_pozarze[i] = time.time()
                     if msg[0] == '2':
                         klienci_tablica_otrzymanych_informacji[int(msg[1])][0] = msg[2]
                         klienci_tablica_otrzymanych_informacji[int(msg[1])][1] = msg[3]
