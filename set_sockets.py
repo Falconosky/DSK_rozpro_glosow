@@ -5,7 +5,7 @@ import threading
 import queue
 import RPi.GPIO as GPIO
 
-debug_level = 2
+debug_level = 0
 
 def blink(gpio_led, blink_queue):
     GPIO.setmode(GPIO.BCM)
@@ -14,6 +14,7 @@ def blink(gpio_led, blink_queue):
     sie_pali_czy_nie = 0
     last_time = 0
     tryb = None
+    print("wlaczono blinka")
     while True:
         try:
             while not blink_queue.empty():
