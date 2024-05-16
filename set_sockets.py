@@ -38,6 +38,9 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
     GPIO.setmode(GPIO.BCM)
     #   STALE KONFIGURACYJNE
     cooldown_otrzymania_info_o_pozarze = 30     # w sekundach
+    wiarygodnosc_bredzenia=3
+    aktualne_podejrzenia = 0
+    awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
 
     #   schemat wiadomosci
     #   {typ_wiadomosci}{numer_czujnika_nadawczego}{informacja}
@@ -124,6 +127,27 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             blink_queue.put(1)
                         else:
                             blink_queue.put(0)
+
+                    #   detekcja awarii nr 3
+                    awaria3_pomocnicza_tabela[int(msg[1])] = 1
+                    if awaria3_pomocnicza_tabela[0] == 1 and awaria3_pomocnicza_tabela[1] == 1 and awaria3_pomocnicza_tabela[2] == 1 and awaria3_pomocnicza_tabela[3] == 1 and awaria3_pomocnicza_tabela[4] == 1:
+                        zebrano_podejrzenia = 0
+                        for i in range(4):
+                            for j in range(5):
+                                if wlasna_tablica_otrzymanych_informacji[j] != klienci_tablica_otrzymanych_informacji[i][j]:
+                                    awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
+                                    aktualne_podejrzenia += 1
+                                    zebrano_podejrzenia = 1
+                                    break
+                            if zebrano_podejrzenia == 1:
+                                break
+                        if zebrano_podejrzenia == 0:
+                            aktualne_podejrzenia = 0
+                        elif zebrano_podejrzenia>=wiarygodnosc_bredzenia:
+                            wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
+                            print("wykryto awarie nr 3 w czujniku nr " + msg[1])
+
+
                     if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                         wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
                 if msg[0] == '2':
