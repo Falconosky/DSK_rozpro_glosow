@@ -105,7 +105,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                     if msg[2] == '1':
                         if time_otrzymania_info_o_pozarze[int(msg[1])] == 0:
                             time_otrzymania_info_o_pozarze[int(msg[1])] = time.time()
-                            for i in time_otrzymania_info_o_pozarze:
+                            for i in range(time_otrzymania_info_o_pozarze):
                                 print(i)
                                 if time_otrzymania_info_o_pozarze[i] != 0:
                                     time_otrzymania_info_o_pozarze[i] = time.time()
