@@ -131,6 +131,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
                     #   detekcja awarii nr 3
                     awaria3_pomocnicza_tabela[int(msg[1])] = 1
+                    awaria3_pomocnicza_tabela[ktory_socket] = 1
                     wiadomosc = "Awaria 3: "
                     wiadomosc += str(awaria3_pomocnicza_tabela[0])
                     wiadomosc += str(awaria3_pomocnicza_tabela[1])
