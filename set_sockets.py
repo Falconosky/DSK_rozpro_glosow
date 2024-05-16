@@ -131,6 +131,9 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
                     #   detekcja awarii nr 3
                     awaria3_pomocnicza_tabela[int(msg[1])] = 1
+                    wiadomosc = "Awaria 3: "
+                    wiadomosc += awaria3_pomocnicza_tabela
+                    print(wiadomosc)
                     if awaria3_pomocnicza_tabela[0] == 1 and awaria3_pomocnicza_tabela[1] == 1 and awaria3_pomocnicza_tabela[2] == 1 and awaria3_pomocnicza_tabela[3] == 1 and awaria3_pomocnicza_tabela[4] == 1:
                         zebrano_podejrzenia = 0
                         for i in range(4):
