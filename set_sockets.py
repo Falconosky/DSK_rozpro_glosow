@@ -132,13 +132,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                     #   detekcja awarii nr 3
                     awaria3_pomocnicza_tabela[int(msg[1])] = 1
                     awaria3_pomocnicza_tabela[ktory_socket] = 1
-                    wiadomosc = "Awaria 3: "
-                    wiadomosc += str(awaria3_pomocnicza_tabela[0])
-                    wiadomosc += str(awaria3_pomocnicza_tabela[1])
-                    wiadomosc += str(awaria3_pomocnicza_tabela[2])
-                    wiadomosc += str(awaria3_pomocnicza_tabela[3])
-                    wiadomosc += str(awaria3_pomocnicza_tabela[4])
-                    print(wiadomosc)
                     if awaria3_pomocnicza_tabela[0] == 1 and awaria3_pomocnicza_tabela[1] == 1 and awaria3_pomocnicza_tabela[2] == 1 and awaria3_pomocnicza_tabela[3] == 1 and awaria3_pomocnicza_tabela[4] == 1:
                         zebrano_podejrzenia = 0
                         for i in range(4):
@@ -150,6 +143,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                     break
                             if zebrano_podejrzenia == 1:
                                 break
+                        print("zerano wszystkie informacje, " + str(aktualne_podejrzenia))
                         if zebrano_podejrzenia == 0:
                             aktualne_podejrzenia = 0
                         elif zebrano_podejrzenia>=wiarygodnosc_bredzenia:
