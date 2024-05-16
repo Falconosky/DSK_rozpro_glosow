@@ -98,6 +98,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         tmp = '1' + tresc_wiadomosci[1] + str(random.randint(0, 1))
                         tresc_wiadomosci = tmp
                 message = f'{tresc_wiadomosci}'
+                print(message)
                 client_sock.sendto(message.encode(), client_address)
                 client_sock.close()
 
@@ -105,7 +106,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
         try:
             while not message_queue.empty():
                 msg = message_queue.get_nowait()
-                print("msg: " + msg)
                 if msg[0] == '1':
                     if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                         if msg[2] == '1':
