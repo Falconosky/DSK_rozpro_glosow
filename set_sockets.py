@@ -20,6 +20,7 @@ def blink(gpio_led, blink_queue):
         # Sprawdzanie, czy w kolejce są nowe wiadomości
         while not blink_queue.empty():
             tryb = blink_queue.get_nowait()
+            print("Tryb: " + str(tryb))
 
         # Działania zależne od trybu
         if tryb == 0:
@@ -191,6 +192,16 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         klienci_tablica_otrzymanych_informacji[int(msg[1])][2] = msg[4]
                         klienci_tablica_otrzymanych_informacji[int(msg[1])][3] = msg[5]
                         klienci_tablica_otrzymanych_informacji[int(msg[1])][4] = msg[6]
+
+                        ile_na_nie = 0
+                        for i in range(5):
+                            if i == ktory_socket:
+                                continue
+                            if klienci_tablica_otrzymanych_informacji[i][ktory_socket] == 'x':
+                                ile_na_nie += 1
+                        if ile_na_nie >= 4:
+                            print("To ja nie dzialam :(")
+                            wlasna_tablica_otrzymanych_informacji[ktory_socket] = 'x'
 
                         #   Obsluga bledu nr3
                         ktora_to_literka = 2 + ktory_socket
