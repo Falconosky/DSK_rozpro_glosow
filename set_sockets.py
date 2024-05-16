@@ -71,8 +71,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                               ['0', '0', '0', '0', '0'],
                                               ['0', '0', '0', '0', '0']]
     time_otrzymania_info_o_pozarze = [0, 0, 0, 0, 0]
-    blink_queue = queue.Queue()
-    threading.Thread(target=blink, args=(gpio_led, blink_queue)).start()
+    blink_queue = [queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue()]
+    threading.Thread(target=blink, args=(gpio_led, blink_queue[ktory_socket])).start()
 
     klienci_tablica_otrzymanych_informacji[ktory_socket] = ['-', '-', '-', '-', '-']
 
