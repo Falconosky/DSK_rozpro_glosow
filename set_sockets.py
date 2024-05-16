@@ -175,13 +175,15 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 blink_queue.put(1)
                                 juz_jest_pozar = 1
                                 print("jest juz pozar")
+                            elif juz_jest_pozar == 1:
+                                juz_jest_pozar = 0
+                                for i in range(5):
+                                    if time_otrzymania_info_o_pozarze[i] != 0:
+                                        time_otrzymania_info_o_pozarze[i] = time.time()
                             else:
                                 blink_queue.put(0)
                                 juz_jest_pozar = 0
                                 print("nie ma juz pozaru")
-                                for i in range(5):
-                                    if time_otrzymania_info_o_pozarze[i] != 0:
-                                        time_otrzymania_info_o_pozarze[i] = time.time()
                     if msg[0] == '2':
                         klienci_tablica_otrzymanych_informacji[int(msg[1])][0] = msg[2]
                         klienci_tablica_otrzymanych_informacji[int(msg[1])][1] = msg[3]
