@@ -140,7 +140,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 for j in range(5):
                                     if wlasna_tablica_otrzymanych_informacji[j] != klienci_tablica_otrzymanych_informacji[i][j]:
                                         print(wlasna_tablica_otrzymanych_informacji)
-                                        print(str(wlasna_tablica_otrzymanych_informacji[j] + "!=" + klienci_tablica_otrzymanych_informacji[i][j]))
+                                        print(str(wlasna_tablica_otrzymanych_informacji[j]) + "!=" + str(klienci_tablica_otrzymanych_informacji[i][j]))
                                         print(klienci_tablica_otrzymanych_informacji[i])
                                         awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
                                         aktualne_podejrzenia += 1
