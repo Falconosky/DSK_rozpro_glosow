@@ -17,29 +17,33 @@ def blink(gpio_led, blink_queue):
     tryb = None
 
     while True:
-        # Sprawdzanie, czy w kolejce są nowe wiadomości
-        while not blink_queue.empty():
-            tryb = blink_queue.get_nowait()
-            print("Tryb: " + str(tryb))
+        try:
+            # Sprawdzanie, czy w kolejce są nowe wiadomości
+            while not blink_queue.empty():
+                tryb = blink_queue.get_nowait()
+                print("Tryb: " + str(tryb))
 
-        # Działania zależne od trybu
-        if tryb == 0:
-            GPIO.output(gpio_led, GPIO.LOW)
-        elif tryb == 1:
-            GPIO.output(gpio_led, GPIO.HIGH)
-        elif tryb == 2:
-            current_time = time.time()
-            if sie_pali_czy_nie == 0 and last_time + blinking_duration < current_time:
-                GPIO.output(gpio_led, GPIO.HIGH)
-                last_time = current_time
-                sie_pali_czy_nie = 1
-            elif sie_pali_czy_nie == 1 and last_time + blinking_duration < current_time:
+            # Działania zależne od trybu
+            if tryb == 0:
                 GPIO.output(gpio_led, GPIO.LOW)
-                last_time = current_time
-                sie_pali_czy_nie = 0
+            elif tryb == 1:
+                GPIO.output(gpio_led, GPIO.HIGH)
+            elif tryb == 2:
+                current_time = time.time()
+                if sie_pali_czy_nie == 0 and last_time + blinking_duration < current_time:
+                    GPIO.output(gpio_led, GPIO.HIGH)
+                    last_time = current_time
+                    sie_pali_czy_nie = 1
+                elif sie_pali_czy_nie == 1 and last_time + blinking_duration < current_time:
+                    GPIO.output(gpio_led, GPIO.LOW)
+                    last_time = current_time
+                    sie_pali_czy_nie = 0
 
-        # Czekanie przed kolejnym cyklem pętli
-        time.sleep(loop_speed)
+            # Czekanie przed kolejnym cyklem pętli
+            time.sleep(loop_speed)
+        except queue.Empty:
+            print("Kolejka jest teraz pusta.")
+            continue
 
 def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, gpio_switch1, gpio_switch2):
     GPIO.setmode(GPIO.BCM)
