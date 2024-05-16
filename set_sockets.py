@@ -69,10 +69,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
         if GPIO.input(gpio_switch1) == GPIO.LOW:
             stan_czujnika = 1
-            wlasna_tablica_otrzymanych_informacji[ktory_socket] = 1
+            wlasna_tablica_otrzymanych_informacji[ktory_socket] = '1'
         else:
             stan_czujnika = 0
-            wlasna_tablica_otrzymanych_informacji[ktory_socket] = 0
+            wlasna_tablica_otrzymanych_informacji[ktory_socket] = '0'
             if GPIO.input(gpio_switch2) == GPIO.LOW:
                 awaria3 = 1
             else:
