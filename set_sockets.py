@@ -18,8 +18,8 @@ def blink(gpio_led, blink_queue):
         try:
             while not blink_queue.empty():
                 tryb = blink_queue.get_nowait()
-                print("wlaczono blinka")
         except queue.Empty:
+            print("wlaczono blinka")
             if tryb == 0:
                 GPIO.output(gpio_led, GPIO.LOW)
             elif tryb == 1:
