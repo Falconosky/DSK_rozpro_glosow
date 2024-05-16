@@ -105,6 +105,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
         try:
             while not message_queue.empty():
                 msg = message_queue.get_nowait()
+                print("msg: " + msg)
                 if msg[0] == '1':
                     if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                         if msg[2] == '1':
@@ -167,7 +168,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
                     #   Obsluga bledu nr3
                     ktora_to_literka = 2 + ktory_socket
-                    print("msg: " + msg)
                     if msg[ktora_to_literka] == 'x':
                         print("to ja nie dzialam :o")
                     for i in range(5):
