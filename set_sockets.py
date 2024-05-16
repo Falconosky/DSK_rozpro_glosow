@@ -150,8 +150,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                         break
                                 if zebrano_podejrzenia == 1:
                                     break
-                            if debug_level >= 2:
-                                print("zerano wszystkie informacje, " + str(aktualne_podejrzenia))
                             if zebrano_podejrzenia == 0:
                                 aktualne_podejrzenia = 0
                             elif aktualne_podejrzenia >= wiarygodnosc_bredzenia:
