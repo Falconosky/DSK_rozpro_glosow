@@ -169,7 +169,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][4] = msg[6]
 
                     #   Obsluga bledu nr3
-                    if klienci_tablica_otrzymanych_informacji[int(msg[1])][ktory_socket] == 'x':
+                    ktora_to_literka = 2 + ktory_socket
+                    if msg[ktora_to_literka] == 'x':
                         print("to ja nie dzialam :o")
                     for i in range(5):
                         if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
