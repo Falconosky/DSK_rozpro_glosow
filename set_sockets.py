@@ -134,6 +134,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         #   detekcja awarii nr 3
                         awaria3_pomocnicza_tabela[int(msg[1])] = 1
                         awaria3_pomocnicza_tabela[ktory_socket] = 1
+                        ktory_to_nie_dziala = 0
                         if awaria3_pomocnicza_tabela[0] == 1 and awaria3_pomocnicza_tabela[1] == 1 and awaria3_pomocnicza_tabela[2] == 1 and awaria3_pomocnicza_tabela[3] == 1 and awaria3_pomocnicza_tabela[4] == 1:
                             zebrano_podejrzenia = 0
                             for i in range(4):
@@ -143,6 +144,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                         print(str(wlasna_tablica_otrzymanych_informacji[j]) + "!=" + str(klienci_tablica_otrzymanych_informacji[i][j]))
                                         print(klienci_tablica_otrzymanych_informacji[i])
                                         awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
+                                        ktory_to_nie_dziala = j
                                         aktualne_podejrzenia += 1
                                         zebrano_podejrzenia = 1
                                         break
@@ -152,10 +154,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 print("zerano wszystkie informacje, " + str(aktualne_podejrzenia))
                             if zebrano_podejrzenia == 0:
                                 aktualne_podejrzenia = 0
-                            elif aktualne_podejrzenia>=wiarygodnosc_bredzenia:
+                            elif aktualne_podejrzenia >= wiarygodnosc_bredzenia:
                                 aktualne_podejrzenia = 0
-                                wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
-                                print("wykryto awarie nr 3 w czujniku nr " + msg[1])
+                                wlasna_tablica_otrzymanych_informacji[ktory_to_nie_dziala] = 'x'
+                                print("wykryto awarie nr 3 w czujniku nr " + str(ktory_to_nie_dziala))
 
                         if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                             if time_otrzymania_info_o_pozarze[int(msg[1])] != 0 and msg[2] == 0:
