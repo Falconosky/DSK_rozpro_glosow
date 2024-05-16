@@ -48,6 +48,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
     aktualne_podejrzenia = 0
     awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
     tresc_wiadomosci = '2'
+    juz_jest_pozar=0
 
     #   schemat wiadomosci
     #   {typ_wiadomosci}{numer_czujnika_nadawczego}{informacja}
@@ -121,7 +122,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                 for i in range(len(time_otrzymania_info_o_pozarze)):
                                     if time_otrzymania_info_o_pozarze[i] != 0:
                                         time_otrzymania_info_o_pozarze[i] = time.time()
-                            elif time_otrzymania_info_o_pozarze[int(msg[1])] + cooldown_otrzymania_info_o_pozarze < time.time():
+                            elif time_otrzymania_info_o_pozarze[int(msg[1])] + cooldown_otrzymania_info_o_pozarze < time.time() and juz_jest_pozar == 0:
                                 #   AWARIA ze zbyt dlugim pozarem
                                 print("Wykryto awarie nr 2 w czujniku nr " + msg[1])
                                 wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
@@ -136,8 +137,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                                     ile_czujnikow_dziala += 1
                             if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
                                 blink_queue.put(1)
+                                juz_jest_pozar = 1
                             else:
                                 blink_queue.put(0)
+                                juz_jest_pozar = 0
 
                         #   detekcja awarii nr 3
                         awaria3_pomocnicza_tabela[int(msg[1])] = 1
