@@ -65,10 +65,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                     if msg[2] == '1':
                         if time_otrzymania_info_o_pozarze[int(msg[1])] == 0:
                             time_otrzymania_info_o_pozarze[int(msg[1])] = time.time()
-                            print("Pozar w czujniku " + str(msg[1]) + ", czas: " + str(time_otrzymania_info_o_pozarze[int(msg[1])]))
                         elif time_otrzymania_info_o_pozarze[int(msg[1])] + cooldown_otrzymania_info_o_pozarze < time.time():
                             #   AWARIA ze zbyt dlugim pozarem
-                            print(str(time_otrzymania_info_o_pozarze[int(msg[1])]) + " + " + str(cooldown_otrzymania_info_o_pozarze) + "<" + str(time.time()))
                             wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
 
                         # weryfikacja czy jest pozar
@@ -96,8 +94,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
                             wlasna_tablica_otrzymanych_informacji[i] = 'x'
                             print("awaria typu 3")
-
-                print(time.time())
                 print(wlasna_tablica_otrzymanych_informacji)
         except queue.Empty:
             continue
