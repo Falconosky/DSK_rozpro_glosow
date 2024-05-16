@@ -5,7 +5,7 @@ import threading
 import queue
 import RPi.GPIO as GPIO
 
-debug_level = 0
+debug_level = 1
 
 def blink(gpio_led, blink_queue):
     GPIO.setmode(GPIO.BCM)
@@ -175,7 +175,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
                         #   Obsluga bledu nr3
                         ktora_to_literka = 2 + ktory_socket
-                        if msg[ktora_to_literka] == 'x':
+                        if msg[ktora_to_literka] == 'x' and wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                             blink_queue.put(2)
                         for i in range(5):
                             if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
