@@ -9,32 +9,36 @@ debug_level = 0
 
 def blink(gpio_led, blink_queue):
     GPIO.setmode(GPIO.BCM)
+
     blinking_duration = 3
-    loop_speed = 0.5            #  jak szybko/czesto watek sprawdza zawartosc kolejki
+    loop_speed = 0.5  # Jak szybko/często wątek sprawdza zawartość kolejki
     sie_pali_czy_nie = 0
     last_time = 0
     tryb = None
+
     while True:
-        try:
-            while not blink_queue.empty():
-                tryb = blink_queue.get_nowait()
-                print("wlaczono blinka" + str(tryb))
-        except queue.Empty:
-            if tryb == 0:
-                GPIO.output(gpio_led, GPIO.LOW)
-            elif tryb == 1:
+        # Sprawdzanie, czy w kolejce są nowe wiadomości
+        while not blink_queue.empty():
+            tryb = blink_queue.get_nowait()
+
+        # Działania zależne od trybu
+        if tryb == 0:
+            GPIO.output(gpio_led, GPIO.LOW)
+        elif tryb == 1:
+            GPIO.output(gpio_led, GPIO.HIGH)
+        elif tryb == 2:
+            current_time = time.time()
+            if sie_pali_czy_nie == 0 and last_time + blinking_duration < current_time:
                 GPIO.output(gpio_led, GPIO.HIGH)
-            elif tryb == 2:
-                if sie_pali_czy_nie == 0 and last_time+blinking_duration < time.time():
-                    GPIO.output(gpio_led, GPIO.HIGH)
-                    last_time = time.time()
-                    sie_pali_czy_nie = 1
-                elif sie_pali_czy_nie == 1 and last_time+blinking_duration < time.time():
-                    GPIO.output(gpio_led, GPIO.LOW)
-                    last_time = time.time()
-                    sie_pali_czy_nie = 0
-            time.sleep(loop_speed)
-            continue
+                last_time = current_time
+                sie_pali_czy_nie = 1
+            elif sie_pali_czy_nie == 1 and last_time + blinking_duration < current_time:
+                GPIO.output(gpio_led, GPIO.LOW)
+                last_time = current_time
+                sie_pali_czy_nie = 0
+
+        # Czekanie przed kolejnym cyklem pętli
+        time.sleep(loop_speed)
 
 def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, gpio_switch1, gpio_switch2):
     GPIO.setmode(GPIO.BCM)
