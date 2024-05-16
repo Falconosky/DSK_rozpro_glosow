@@ -106,57 +106,61 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
             while not message_queue.empty():
                 msg = message_queue.get_nowait()
                 if msg[0] == '1':
-                    if msg[2] == '1':
-                        if time_otrzymania_info_o_pozarze[int(msg[1])] == 0:
-                            time_otrzymania_info_o_pozarze[int(msg[1])] = time.time()
-                            for i in range(len(time_otrzymania_info_o_pozarze)):
-                                if time_otrzymania_info_o_pozarze[i] != 0:
-                                    time_otrzymania_info_o_pozarze[i] = time.time()
-                        elif time_otrzymania_info_o_pozarze[int(msg[1])] + cooldown_otrzymania_info_o_pozarze < time.time():
-                            #   AWARIA ze zbyt dlugim pozarem
-                            print("Wykryto awarie nr 2 w czujniku nr " + msg[1])
-                            wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
-
-                        # weryfikacja czy jest pozar
-                        ile_czujnikow_dziala = 0
-                        ile_czujnikow_plonie = 0
-                        for i in range(5):
-                            if not str(wlasna_tablica_otrzymanych_informacji[i]) == 'x':
-                                if str(wlasna_tablica_otrzymanych_informacji[i]) == '1':
-                                    ile_czujnikow_plonie += 1
-                                ile_czujnikow_dziala += 1
-                        if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
-                            blink_queue.put(1)
-                        else:
-                            blink_queue.put(0)
-
-                    #   detekcja awarii nr 3
-                    awaria3_pomocnicza_tabela[int(msg[1])] = 1
-                    awaria3_pomocnicza_tabela[ktory_socket] = 1
-                    if awaria3_pomocnicza_tabela[0] == 1 and awaria3_pomocnicza_tabela[1] == 1 and awaria3_pomocnicza_tabela[2] == 1 and awaria3_pomocnicza_tabela[3] == 1 and awaria3_pomocnicza_tabela[4] == 1:
-                        zebrano_podejrzenia = 0
-                        for i in range(4):
-                            for j in range(5):
-                                if wlasna_tablica_otrzymanych_informacji[j] != klienci_tablica_otrzymanych_informacji[i][j]:
-                                    awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
-                                    aktualne_podejrzenia += 1
-                                    zebrano_podejrzenia = 1
-                                    break
-                            if zebrano_podejrzenia == 1:
-                                break
-                        if debug_level >= 2:
-                            print("zerano wszystkie informacje, " + str(aktualne_podejrzenia))
-                        if zebrano_podejrzenia == 0:
-                            aktualne_podejrzenia = 0
-                        elif aktualne_podejrzenia>=wiarygodnosc_bredzenia:
-                            wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
-                            print("wykryto awarie nr 3 w czujniku nr " + msg[1])
-
-
                     if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
-                        if time_otrzymania_info_o_pozarze[int(msg[1])] != 0 and msg[2] == 0:
-                            time_otrzymania_info_o_pozarze[int(msg[1])] = 0
-                        wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
+                        if msg[2] == '1':
+                            if time_otrzymania_info_o_pozarze[int(msg[1])] == 0:
+                                time_otrzymania_info_o_pozarze[int(msg[1])] = time.time()
+                                for i in range(len(time_otrzymania_info_o_pozarze)):
+                                    if time_otrzymania_info_o_pozarze[i] != 0:
+                                        time_otrzymania_info_o_pozarze[i] = time.time()
+                            elif time_otrzymania_info_o_pozarze[int(msg[1])] + cooldown_otrzymania_info_o_pozarze < time.time():
+                                #   AWARIA ze zbyt dlugim pozarem
+                                print("Wykryto awarie nr 2 w czujniku nr " + msg[1])
+                                wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
+
+                            # weryfikacja czy jest pozar
+                            ile_czujnikow_dziala = 0
+                            ile_czujnikow_plonie = 0
+                            for i in range(5):
+                                if not str(wlasna_tablica_otrzymanych_informacji[i]) == 'x':
+                                    if str(wlasna_tablica_otrzymanych_informacji[i]) == '1':
+                                        ile_czujnikow_plonie += 1
+                                    ile_czujnikow_dziala += 1
+                            if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
+                                blink_queue.put(1)
+                            else:
+                                blink_queue.put(0)
+
+                        #   detekcja awarii nr 3
+                        awaria3_pomocnicza_tabela[int(msg[1])] = 1
+                        awaria3_pomocnicza_tabela[ktory_socket] = 1
+                        if awaria3_pomocnicza_tabela[0] == 1 and awaria3_pomocnicza_tabela[1] == 1 and awaria3_pomocnicza_tabela[2] == 1 and awaria3_pomocnicza_tabela[3] == 1 and awaria3_pomocnicza_tabela[4] == 1:
+                            zebrano_podejrzenia = 0
+                            for i in range(4):
+                                for j in range(5):
+                                    if wlasna_tablica_otrzymanych_informacji[j] != klienci_tablica_otrzymanych_informacji[i][j]:
+                                        print(wlasna_tablica_otrzymanych_informacji)
+                                        print(str(wlasna_tablica_otrzymanych_informacji[j] + "!=" + klienci_tablica_otrzymanych_informacji[i][j]))
+                                        print(klienci_tablica_otrzymanych_informacji[i])
+                                        awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
+                                        aktualne_podejrzenia += 1
+                                        zebrano_podejrzenia = 1
+                                        break
+                                if zebrano_podejrzenia == 1:
+                                    break
+                            if debug_level >= 2:
+                                print("zerano wszystkie informacje, " + str(aktualne_podejrzenia))
+                            if zebrano_podejrzenia == 0:
+                                aktualne_podejrzenia = 0
+                            elif aktualne_podejrzenia>=wiarygodnosc_bredzenia:
+                                aktualne_podejrzenia = 0
+                                wlasna_tablica_otrzymanych_informacji[int(msg[1])] = 'x'
+                                print("wykryto awarie nr 3 w czujniku nr " + msg[1])
+
+                        if wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
+                            if time_otrzymania_info_o_pozarze[int(msg[1])] != 0 and msg[2] == 0:
+                                time_otrzymania_info_o_pozarze[int(msg[1])] = 0
+                            wlasna_tablica_otrzymanych_informacji[int(msg[1])] = msg[2]
                 if msg[0] == '2':
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][0] = msg[2]
                     klienci_tablica_otrzymanych_informacji[int(msg[1])][1] = msg[3]
