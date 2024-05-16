@@ -140,9 +140,6 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             for i in range(4):
                                 for j in range(5):
                                     if wlasna_tablica_otrzymanych_informacji[j] != klienci_tablica_otrzymanych_informacji[i][j]:
-                                        print(wlasna_tablica_otrzymanych_informacji)
-                                        print(str(wlasna_tablica_otrzymanych_informacji[j]) + "!=" + str(klienci_tablica_otrzymanych_informacji[i][j]))
-                                        print(klienci_tablica_otrzymanych_informacji[i])
                                         awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
                                         ktory_to_nie_dziala = j
                                         aktualne_podejrzenia += 1
@@ -170,6 +167,7 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
                     #   Obsluga bledu nr3
                     ktora_to_literka = 2 + ktory_socket
+                    print("msg: " + msg)
                     if msg[ktora_to_literka] == 'x':
                         print("to ja nie dzialam :o")
                     for i in range(5):
