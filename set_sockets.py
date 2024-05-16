@@ -21,7 +21,6 @@ def blink(gpio_led, blink_queue):
             # Sprawdzanie, czy w kolejce są nowe wiadomości
             while not blink_queue.empty():
                 tryb = blink_queue.get_nowait()
-                print("Tryb: " + str(tryb))
 
             # Działania zależne od trybu
             if tryb == 0:
