@@ -182,9 +182,14 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             blink_queue.put(2)
                         for i in range(5):
                             if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
+                                na_pewno = 0
                                 wlasna_tablica_otrzymanych_informacji[i] = 'x'
                 if debug_level >= 1:
                     print(wlasna_tablica_otrzymanych_informacji)
+
+                print("klieci")
+                print(klienci_tablica_otrzymanych_informacji)
+                print("\n")
         except queue.Empty:
             continue
 
