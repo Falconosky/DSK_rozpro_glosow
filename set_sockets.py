@@ -48,7 +48,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
     aktualne_podejrzenia = 0
     awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
     tresc_wiadomosci = '2'
-    juz_jest_pozar=0
+    juz_jest_pozar = 0
+    na_pewno = 0
 
     #   schemat wiadomosci
     #   {typ_wiadomosci}{numer_czujnika_nadawczego}{informacja}
@@ -153,6 +154,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             zebrano_podejrzenia = 0
                             for i in range(4):
                                 for j in range(5):
+                                    if j == ktory_socket:
+                                        continue
                                     if wlasna_tablica_otrzymanych_informacji[j] != klienci_tablica_otrzymanych_informacji[i][j]:
                                         awaria3_pomocnicza_tabela = [0, 0, 0, 0, 0]
                                         ktory_to_nie_dziala = j
@@ -184,9 +187,14 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                         if msg[ktora_to_literka] == 'x' and wlasna_tablica_otrzymanych_informacji[int(msg[1])] != 'x':
                             blink_queue.put(2)
                         for i in range(5):
+                            if i == ktory_socket:
+                                continue
                             if wlasna_tablica_otrzymanych_informacji[i] != klienci_tablica_otrzymanych_informacji[int(msg[1])][i]:
+                                na_pewno += 1
+                                if na_pewno >= 10:
+                                    wlasna_tablica_otrzymanych_informacji[i] = 'x'
+                            else:
                                 na_pewno = 0
-                                wlasna_tablica_otrzymanych_informacji[i] = 'x'
                 if debug_level >= 1:
                     print(wlasna_tablica_otrzymanych_informacji)
 
