@@ -228,6 +228,9 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                 if debug_level >= 1:
                     print(wlasna_tablica_otrzymanych_informacji)
 
+                if wlasna_tablica_otrzymanych_informacji[ktory_socket] == 'x':
+                    blink_queue.put(2)
+
                 print("klieci")
                 print(klienci_tablica_otrzymanych_informacji[0])
                 print(klienci_tablica_otrzymanych_informacji[1])
