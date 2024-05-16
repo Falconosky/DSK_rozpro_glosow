@@ -142,9 +142,14 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                             if ile_czujnikow_plonie >= ile_czujnikow_dziala/2:
                                 blink_queue.put(1)
                                 juz_jest_pozar = 1
+                                print("jest juz pozar")
                             else:
                                 blink_queue.put(0)
                                 juz_jest_pozar = 0
+                                print("nie ma juz pozaru")
+                                for i in range(5):
+                                    if time_otrzymania_info_o_pozarze[i] != 0:
+                                        time_otrzymania_info_o_pozarze[i] = time.time()
 
                         #   detekcja awarii nr 3
                         awaria3_pomocnicza_tabela[int(msg[1])] = 1
