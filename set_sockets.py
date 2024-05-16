@@ -188,7 +188,11 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
                     print(wlasna_tablica_otrzymanych_informacji)
 
                 print("klieci")
-                print(klienci_tablica_otrzymanych_informacji)
+                print(klienci_tablica_otrzymanych_informacji[0])
+                print(klienci_tablica_otrzymanych_informacji[1])
+                print(klienci_tablica_otrzymanych_informacji[2])
+                print(klienci_tablica_otrzymanych_informacji[3])
+                print(klienci_tablica_otrzymanych_informacji[4])
                 print("\n")
         except queue.Empty:
             continue
