@@ -230,6 +230,10 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
 
                 if wlasna_tablica_otrzymanych_informacji[ktory_socket] == 'x':
                     blink_queue.put(2)
+                    for i in range(5):
+                        if i == ktory_socket:
+                            continue
+                        klienci_tablica_otrzymanych_informacji[i][ktory_socket] = 'x'
 
                 print("klieci")
                 print(klienci_tablica_otrzymanych_informacji[0])
