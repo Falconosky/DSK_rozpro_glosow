@@ -21,6 +21,8 @@ def blink(gpio_led, blink_queue):
         while not blink_queue.empty():
             tryb = blink_queue.get_nowait()
 
+        print("Tryb: " + str(tryb))
+
         # Działania zależne od trybu
         if tryb == 0:
             GPIO.output(gpio_led, GPIO.LOW)
@@ -68,6 +70,8 @@ def send_messages_thread(ktory_socket, czujniki_porty, message_queue, gpio_led, 
     time_otrzymania_info_o_pozarze = [0, 0, 0, 0, 0]
     blink_queue = queue.Queue()
     threading.Thread(target=blink, args=(gpio_led, blink_queue)).start()
+
+    klienci_tablica_otrzymanych_informacji[ktory_socket] = ['-', '-', '-', '-', '-']
 
 
     while True:
